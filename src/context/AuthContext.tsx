@@ -41,12 +41,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
     const formatted = await formatUser(result.user);
-    localStorage.setItem("authToken", formatted.token);
+    localStorage.setItem("Token", formatted.token);
     setUser(formatted);
   };
 
   const logout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("Token");
     setUser(null);
   };
 
