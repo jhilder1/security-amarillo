@@ -14,6 +14,7 @@ import { addressService } from "../services/AddressService";
 import GenericTable from "../components/GenericTable";
 import { User } from "../models/User";
 import { useOutletContext } from "react-router-dom";
+import LocationPickerMap from "../components/LocationPickerMap"; // ✅ agregado
 
 const userColumns = ["id", "name", "email"];
 const addressColumns = ["id", "street", "number", "latitude", "longitude"];
@@ -64,17 +65,15 @@ const UserAddressesPage = () => {
           alert(`El usuario ${user.name} ya tiene una dirección asociada.`);
           return;
         }
-      } catch {
-        // Si hay error, asumimos que no tiene dirección
-      }
+      } catch {}
 
       setSelectedUserForAddress(user);
       setForm({
         id: undefined,
         street: "",
         number: "",
-        latitude: "",
-        longitude: "",
+        latitude: "0",
+        longitude: "0",
       });
     }
 
@@ -91,8 +90,8 @@ const UserAddressesPage = () => {
         id: item.id,
         street: item.street || "",
         number: item.number || "",
-        latitude: String(item.latitude || ""),
-        longitude: String(item.longitude || ""),
+        latitude: String(item.latitude || "0"),
+        longitude: String(item.longitude || "0"),
       });
     }
 
@@ -190,6 +189,19 @@ const UserAddressesPage = () => {
               onChange={(e) => setForm({ ...form, longitude: e.target.value })}
               fullWidth
               margin="dense"
+            />
+
+            {/* ✅ Mapa interactivo */}
+            <LocationPickerMap
+              latitude={parseFloat(form.latitude) || 0}
+              longitude={parseFloat(form.longitude) || 0}
+              onSelect={(lat, lng) =>
+                setForm({
+                  ...form,
+                  latitude: String(lat),
+                  longitude: String(lng),
+                })
+              }
             />
           </DialogContent>
           <DialogActions>
